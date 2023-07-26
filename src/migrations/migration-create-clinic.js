@@ -23,6 +23,10 @@ module.exports = {
             image: {
                 type: Sequelize.BLOB('long')
             },
+            provinceId: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

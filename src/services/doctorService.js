@@ -522,7 +522,8 @@ let submitCommentByEmail = (data) => {
                         await db.Comment.create({
                             patientId: userInfor.id,
                             doctorId: data.doctorId,
-                            content: data.comment
+                            content: data.comment,
+                            rate: data.rate
                         })
 
                         resolve({
@@ -532,14 +533,14 @@ let submitCommentByEmail = (data) => {
                     } else {
                         resolve({
                             errCode: 1,
-                            errMessage: 'Bạn chưa thăm khám với bác sĩ này'
+                            errMessage: 'Bạn chưa thăm khám với bác sĩ này hoặc nhập sai email!'
                         })
                     }
 
                 } else {
                     resolve({
                         errCode: 1,
-                        errMessage: 'Bạn chưa thăm khám với bác sĩ này'
+                        errMessage: 'Bạn chưa thăm khám với bác sĩ này hoặc nhập sai email!'
                     })
                 }
 

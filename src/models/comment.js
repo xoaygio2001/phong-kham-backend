@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         patientId: DataTypes.INTEGER,
         doctorId: DataTypes.INTEGER,
         content: DataTypes.STRING,
-
+        rate: DataTypes.INTEGER
     }, {
         sequelize,
         modelName: 'Comment',

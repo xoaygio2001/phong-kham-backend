@@ -8,6 +8,7 @@ import cors from 'cors';
 require('dotenv').config();
 
 let app = express();
+app.set('trust proxy', true)
 
 // config app
 

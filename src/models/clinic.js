@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Clinic.belongsTo(models.Allcode, { foreignKey: 'provinceId', targetKey: 'keyMap', as: 'provinceTypeData' })
         }
     };
     Clinic.init({
@@ -19,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         descriptionMarkdown: DataTypes.TEXT,
         descriptionHTML: DataTypes.TEXT,
         image: DataTypes.TEXT,
+        provinceId: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Clinic',

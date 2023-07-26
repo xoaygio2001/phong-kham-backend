@@ -8,6 +8,7 @@ let createClinic = (data) => {
                 || !data.imageBase64
                 || !data.descriptionHTML
                 || !data.descriptionMarkdown
+                || !data.selectedProvince
             ) {
                 resolve({
                     errCode: 1,
@@ -19,7 +20,8 @@ let createClinic = (data) => {
                     address: data.address,
                     image: data.imageBase64,
                     descriptionHTML: data.descriptionHTML,
-                    descriptionMarkdown: data.descriptionMarkdown
+                    descriptionMarkdown: data.descriptionMarkdown,
+                    provinceId: data.selectedProvince.value
                 })
 
                 resolve({
@@ -37,7 +39,13 @@ let createClinic = (data) => {
 let getAllClinic = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Clinic.findAll({});
+            let data = await db.Clinic.findAll({
+                include: [
+                    { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEn', 'valueVi'] }
+                ],
+                raw: true,
+                nest: true
+            });
             if (data && data.length > 0) {
                 data.map(item => {
                     item.image = new Buffer(item.image, 'base64').toString('binary');
