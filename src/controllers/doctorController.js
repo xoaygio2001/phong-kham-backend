@@ -198,8 +198,33 @@ let postWarningPatient = async (req, res) => {
     }
 }
 
+let getPatientByGmail = async (req, res) => {
+    try {
+        let infor = await doctorService.getPatientByGmail(req.query.gmail);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 
-
+let CreateHistory = async (req, res) => {
+    try {
+        let response = await doctorService.CreateHistory(req.body);
+        return res.status(200).json(response)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 
 
 module.exports = {
@@ -215,5 +240,7 @@ module.exports = {
     sendRemedy: sendRemedy,
     submitCommentByEmail: submitCommentByEmail,
     getCommentByDoctorId: getCommentByDoctorId,
-    postWarningPatient: postWarningPatient
+    postWarningPatient: postWarningPatient,
+    getPatientByGmail: getPatientByGmail,
+    CreateHistory: CreateHistory
 }

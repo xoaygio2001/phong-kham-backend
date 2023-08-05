@@ -8,19 +8,18 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            patitentId: {
+            patientId: {
                 type: Sequelize.INTEGER
             },
             doctorId: {
                 type: Sequelize.INTEGER
             },
-            description: {
-                type: Sequelize.TEXT
+            date: {
+                type: Sequelize.STRING
             },
-            files: {
-                type: Sequelize.TEXT
+            image: {
+                type: Sequelize.BLOB('long')
             },
-
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

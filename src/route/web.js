@@ -49,6 +49,8 @@ let initWebRoutes = (app) => {
 
     router.post('/api/post-warning-patient', doctorController.postWarningPatient);
 
+    router.get('/api/get-patient-by-gmail', doctorController.getPatientByGmail);
+
     router.post('/api/post-Delete-Schedule', patientController.postDeleteSchedule);
 
     router.post('/api/edit-specialty', specialtyController.EditSpecialty);
@@ -58,6 +60,12 @@ let initWebRoutes = (app) => {
     router.post('/api/edit-clinic', clinicController.EditClinic);
 
     router.delete('/api/delete-clinic', clinicController.DeleteClinic);
+
+    router.post('/api/crate-new-history', doctorController.CreateHistory);
+
+    router.get('/api/get-patient-data-by-id', patientController.getDataPatient);
+
+
 
     return app.use("/", router);
 };

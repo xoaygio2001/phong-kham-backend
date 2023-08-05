@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Booking, { foreignKey: 'patientId', as: 'patientData' })
 
       User.hasMany(models.Comment, { foreignKey: 'id', as: 'userData' })
+
+      User.hasMany(models.History, { foreignKey: 'id', as: 'patientHistoryData' })
+      User.hasMany(models.History, { foreignKey: 'id', as: 'doctorHistoryData' })
+
       // define association here
     }
   };

@@ -17,7 +17,6 @@ let buildUrlEmail = (doctorId, token, type) => {
 let postBookAppointment = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-
             if (!data.email || !data.doctorId || !data.timeType || !data.date
                 || !data.fullName || !data.selectedGender
                 || !data.address
@@ -37,7 +36,7 @@ let postBookAppointment = (data) => {
                 if (userTemp && userTemp.warning >= 3) {
                     resolve({
                         errCode: 3,
-                        errMessage: 'Bạn đã bị ban khỏi hệ thống, do bạn vắng quá nhiều trong buổi hẹn'
+                        errMessage: 'Bạn đã bị khóa khỏi hệ thống!'
                     })
                 } else {
 
@@ -62,7 +61,7 @@ let postBookAppointment = (data) => {
                         if (userTemp) {
                             resolve({
                                 errCode: 2,
-                                errMessage: 'Tạo thất bại, bạn đã tạo lịch thời này với bác sĩ này rồi!'
+                                errMessage: 'Tạo thất bại, bạn đã tạo lịch thời gian này với bác sĩ này rồi!'
                             })
                         } else {
                             let token = uuidv4();
@@ -236,8 +235,57 @@ let postDeleteSchedule = (data) => {
     })
 }
 
+let getDataPatient = (patientId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!patientId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required param !'
+                })
+            } else {
+
+                let userData = await db.History.findAll({
+                    where: { patientId: patientId },
+                    include: [
+                        { model: db.User, as: 'patientHistoryData', },
+                        {
+                            model: db.User,
+                            as: 'doctorHistoryData',
+                            include: [
+                                {
+                                    model: db.Doctor_Infor,
+                                    include: [
+                                        {
+                                            model: db.Clinic
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+
+                    ],
+                    raw: true,
+                    nest: true
+                });
+
+                if (!userData) userData = {};
+
+                resolve({
+                    errCode: 0,
+                    data: userData
+                })
+            }
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     postBookAppointment: postBookAppointment,
     postVerifyBookAppointment: postVerifyBookAppointment,
-    postDeleteSchedule: postDeleteSchedule
+    postDeleteSchedule: postDeleteSchedule,
+    getDataPatient: getDataPatient
 }

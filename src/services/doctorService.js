@@ -269,8 +269,7 @@ let getScheduleByDate = (doctorId, date) => {
                     },
                     include: [
                         { model: db.Allcode, as: 'timeTypeData', attributes: ['valueEn', 'valueVi'] },
-
-                        { model: db.User, as: 'doctorData', attributes: ['firstName', 'lastName'] },
+                        { model: db.User, as: 'doctorData', attributes: ['firstName', 'lastName'] }
                     ],
                     raw: false,
                     nest: true
@@ -422,6 +421,36 @@ let getListPatientForDoctor = (doctorId, date) => {
                     raw: false,
                     nest: true
                 })
+                resolve({
+                    errCode: 0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+let getPatientByGmail = (patientGmail) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!patientGmail) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters'
+                })
+            } else {
+                let data = await db.User.findOne({
+                    where: {
+                        roleId: 'R3',
+                        email: patientGmail
+                    },
+                    raw: false,
+                    nest: true
+                })
+                if (!data) data = {};
                 resolve({
                     errCode: 0,
                     data: data
@@ -635,6 +664,35 @@ let postWarningPatient = (data) => {
     })
 }
 
+let CreateHistory = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.patientId || !data.doctorId || !data.image) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required param !'
+                })
+            }
+            // data.avatar = new Buffer(data.avatar, 'base64').toString('binary');
+            await db.History.create({
+                patientId: data.patientId,
+                doctorId: data.doctorId,
+                date: data.date,
+                image: data.image,
+            });
+
+            resolve({
+                errCode: 0,
+                message: 'Oke'
+            })
+        }
+        catch (expcept) {
+            reject(expcept);
+        }
+    })
+}
+
+
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctors: getAllDoctors,
@@ -648,5 +706,7 @@ module.exports = {
     sendRemedy: sendRemedy,
     submitCommentByEmail: submitCommentByEmail,
     getCommentByDoctorId: getCommentByDoctorId,
-    postWarningPatient: postWarningPatient
+    postWarningPatient: postWarningPatient,
+    getPatientByGmail: getPatientByGmail,
+    CreateHistory: CreateHistory
 }
