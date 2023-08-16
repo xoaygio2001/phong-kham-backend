@@ -230,15 +230,23 @@ let bulkCreateSchedule = (data) => {
                         raw: true
                     }
                 );
-                if (!existing) {
-                    console.log('null')
-                }
-                let toCreate = _.differenceWith(schedule, existing, (a, b) => {
-                    return a.timeType === b.timeType && a.date === b.date;
+
+                // let toCreate = _.differenceWith(schedule, existing, (a, b) => {
+                //     return a.timeType === b.timeType;
+                // });
+
+                // if (toCreate && toCreate.length > 0) {
+                //     await db.Schedule.bulkCreate(toCreate);
+                // }
+                await db.Schedule.destroy({
+                    where: {
+                        doctorId: data.doctorId,
+                        date: data.formatedDate
+                    },
                 });
 
-                if (toCreate && toCreate.length > 0) {
-                    await db.Schedule.bulkCreate(toCreate);
+                if (schedule && schedule.length > 0) {
+                    await db.Schedule.bulkCreate(schedule);
                 }
 
                 resolve({

@@ -47,7 +47,8 @@ let postBookAppointment = (data) => {
                             roleId: 'R3',
                             gender: data.selectedGender,
                             address: data.address,
-                            firstName: data.fullName
+                            firstName: data.fullName,
+                            birthday: data.birthday
                         },
                     });
 
@@ -248,7 +249,13 @@ let getDataPatient = (patientId) => {
                 let userData = await db.History.findAll({
                     where: { patientId: patientId },
                     include: [
-                        { model: db.User, as: 'patientHistoryData', },
+                        {
+                            model: db.User,
+                            as: 'patientHistoryData',
+                            include: [
+                                { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] }
+                            ]
+                        },
                         {
                             model: db.User,
                             as: 'doctorHistoryData',
@@ -260,7 +267,8 @@ let getDataPatient = (patientId) => {
                                             model: db.Clinic
                                         }
                                     ]
-                                }
+                                },
+
                             ]
                         }
 
@@ -268,6 +276,13 @@ let getDataPatient = (patientId) => {
                     raw: true,
                     nest: true
                 });
+
+                if (userData && userData.length > 0) {
+                    userData.map(item => {
+                        item.image = new Buffer(item.image, 'base64').toString('binary');
+                        return item;
+                    })
+                }
 
                 if (!userData) userData = {};
 

@@ -77,7 +77,7 @@ let getDetailClinicById = (inputId) => {
                     where: {
                         id: inputId
                     },
-                    attributes: ['id', 'name', 'address', 'descriptionHTML', 'descriptionMarkdown']
+                    attributes: ['id', 'name', 'address', 'descriptionHTML', 'descriptionMarkdown', 'image']
                 })
 
                 if (data) {
@@ -87,6 +87,7 @@ let getDetailClinicById = (inputId) => {
                         attributes: ['doctorId', 'provinceId']
                     })
                     data.doctorClinic = doctorClinic;
+                    data.image = new Buffer(data.image, 'base64').toString('binary');
                 } else data = {}
 
                 resolve({

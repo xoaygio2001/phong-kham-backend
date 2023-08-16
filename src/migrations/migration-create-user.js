@@ -41,6 +41,9 @@ module.exports = {
       warning: {
         type: Sequelize.INTEGER
       },
+      birthday: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
