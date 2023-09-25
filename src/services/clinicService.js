@@ -63,6 +63,56 @@ let getAllClinic = () => {
     })
 }
 
+let getAllClinicByPageNumber = (limit, pageNumber) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!limit || !pageNumber) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required param!'
+                })
+            } else {
+                let orderByType = ['updatedAt', 'DESC'];
+                const offset = (pageNumber - 1) * limit;
+
+                let fake = []
+
+                fake = await db.Clinic.findAll({
+                    attributes: ['id']
+                })
+
+
+
+                let data = await db.Clinic.findAll({
+                    include: [
+                        { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEn', 'valueVi'] }
+                    ],
+                    order: [['id', 'ASC']],
+                    limit: +limit,
+                    offset: offset,
+                    raw: true,
+                    nest: true
+                });
+                if (data && data.length > 0) {
+                    data.map(item => {
+                        item.image = new Buffer(item.image, 'base64').toString('binary');
+                        return item;
+                    })
+                }
+                resolve({
+                    errMessage: 'ok',
+                    errCode: 0,
+                    data,
+                    maxDataNumber: fake.length
+                })
+            }
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 let getDetailClinicById = (inputId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -187,5 +237,6 @@ module.exports = {
     getAllClinic: getAllClinic,
     getDetailClinicById: getDetailClinicById,
     EditClinic: EditClinic,
-    DeleteClinic: DeleteClinic
+    DeleteClinic: DeleteClinic,
+    getAllClinicByPageNumber: getAllClinicByPageNumber
 }

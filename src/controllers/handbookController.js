@@ -47,9 +47,27 @@ let getDetailHandbookById = async (req, res) => {
     }
 }
 
+let getAllHandbookVer2 = async (req, res) => {
+    try {
+        let infor = await handbookService.getAllHandbookVer2(req.query.limit, req.query.pageNumber);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+
+
 
 module.exports = {
     createHandbook: createHandbook,
     getAllHandbook: getAllHandbook,
-    getDetailHandbookById: getDetailHandbookById
+    getDetailHandbookById: getDetailHandbookById,
+    getAllHandbookVer2: getAllHandbookVer2
 }

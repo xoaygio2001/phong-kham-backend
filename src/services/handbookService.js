@@ -57,6 +57,53 @@ let getAllHandbook = () => {
     })
 }
 
+let getAllHandbookVer2 = (limit, pageNumber) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!limit || !pageNumber) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required param!'
+                })
+            }
+            else {
+                let fake = []
+
+                fake = await db.Handbook.findAll({
+                    attributes: ['id']
+                })
+
+
+                let orderByType = ['updatedAt', 'DESC'];
+                const offset = (pageNumber - 1) * limit;
+
+                let data = await db.Handbook.findAll({
+                    order: [['id', 'ASC']],
+                    limit: +limit,
+                    offset: offset,
+                });
+                if (data && data.length > 0) {
+                    data.map(item => {
+                        item.image = new Buffer(item.image, 'base64').toString('binary');
+                        return item;
+                    })
+                }
+
+                resolve({
+                    errMessage: 'ok',
+                    errCode: 0,
+                    data,
+                    maxDataNumber: fake.length
+                })
+            }
+
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 let getDetailHandbookById = (inputId, location) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -96,5 +143,6 @@ let getDetailHandbookById = (inputId, location) => {
 module.exports = {
     createHandbook: createHandbook,
     getAllHandbook: getAllHandbook,
-    getDetailHandbookById: getDetailHandbookById
+    getDetailHandbookById: getDetailHandbookById,
+    getAllHandbookVer2: getAllHandbookVer2
 }

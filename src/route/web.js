@@ -31,6 +31,9 @@ let initWebRoutes = (app) => {
 
     router.get('/api/get-list-patient-for-doctor', doctorController.getListPatientForDoctor);
     router.post('/api/send-remedy', doctorController.sendRemedy);
+    router.get('/api/get-all-doctor-ver2', doctorController.getAllDoctorVer2);
+
+
 
     router.post('/api/patient-book-appointment', patientController.postBookAppointment);
     router.post('/api/verify-book-appointment', patientController.postVerifyBookAppointment);
@@ -41,6 +44,8 @@ let initWebRoutes = (app) => {
 
     router.post('/api/create-new-clinic', clinicController.createClinic);
     router.get('/api/get-clinic', clinicController.getAllClinic);
+    router.get('/api/get-clinic-by-pagenumber', clinicController.getAllClinicByPageNumber);
+
 
     router.get('/api/get-detail-clinic-by-id', clinicController.getDetailClinicById);
 
@@ -71,6 +76,10 @@ let initWebRoutes = (app) => {
     router.get('/api/get-handbook', handbookController.getAllHandbook);
 
     router.get('/api/get-detail-handbook-by-id', handbookController.getDetailHandbookById);
+
+    router.get('/api/get-all-handbook-ver2', handbookController.getAllHandbookVer2);
+
+
 
 
 

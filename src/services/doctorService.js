@@ -43,6 +43,72 @@ let getTopDoctorHome = (limitInput) => {
     })
 }
 
+let getAllDoctorVer2 = (limit, pageNumber) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!limit || !pageNumber) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required param!'
+                })
+            }
+            else {
+                let orderByType = ['updatedAt', 'DESC'];
+                const offset = (pageNumber - 1) * limit;
+
+                let fake = []
+
+                fake = await db.User.findAll({
+                    where: { roleId: 'R2' },
+                    attributes: ['id']
+                })
+
+                let users = await db.User.findAll({
+                    where: { roleId: 'R2' },
+                    attributes: {
+                        exclude: ['password']
+                    },
+                    include: [
+                        { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                        { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] },
+                        {
+                            model: db.Doctor_Infor,
+                            include: [
+                                { model: db.Specialty, as: 'SpecialtyTypeData', attributes: ['name'] }
+                            ]
+                        }
+                    ],
+                    order: [['id', 'ASC']],
+                    limit: +limit,
+                    offset: offset,
+                    raw: true,
+                    nest: true
+                })
+
+                if (users && users.length > 0) {
+                    users.map(item => {
+                        item.image = new Buffer(item.image, 'base64').toString('binary');
+                        return item;
+                    })
+                }
+
+
+                resolve({
+                    errCode: 0,
+                    data: users,
+                    maxDataNumber: fake.length
+                })
+            }
+
+
+        }
+        catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
 let getAllDoctors = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -716,5 +782,6 @@ module.exports = {
     getCommentByDoctorId: getCommentByDoctorId,
     postWarningPatient: postWarningPatient,
     getPatientByGmail: getPatientByGmail,
-    CreateHistory: CreateHistory
+    CreateHistory: CreateHistory,
+    getAllDoctorVer2: getAllDoctorVer2
 }

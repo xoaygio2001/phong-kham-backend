@@ -213,6 +213,23 @@ let getPatientByGmail = async (req, res) => {
     }
 }
 
+let getAllDoctorVer2 = async (req, res) => {
+    try {
+        let infor = await doctorService.getAllDoctorVer2(req.query.limit, req.query.pageNumber);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+
+
 let CreateHistory = async (req, res) => {
     try {
         let response = await doctorService.CreateHistory(req.body);
@@ -242,5 +259,6 @@ module.exports = {
     getCommentByDoctorId: getCommentByDoctorId,
     postWarningPatient: postWarningPatient,
     getPatientByGmail: getPatientByGmail,
-    CreateHistory: CreateHistory
+    CreateHistory: CreateHistory,
+    getAllDoctorVer2: getAllDoctorVer2
 }
