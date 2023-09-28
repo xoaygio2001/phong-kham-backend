@@ -140,9 +140,89 @@ let getDetailHandbookById = (inputId, location) => {
 }
 
 
+let EditHandbook = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (
+                !data.id
+                || !data.title
+                || !data.contentMarkdown
+                || !data.contentHTML) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter'
+                })
+            } else {
+
+                let handbookInfor = await db.Handbook.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                    raw: false
+                })
+                if (handbookInfor) {
+                    handbookInfor.title = data.title;
+                    handbookInfor.contentHTML = data.contentHTML;
+                    handbookInfor.contentMarkdown = data.contentMarkdown;
+                    if (data.imageBase64) {
+                        handbookInfor.image = data.imageBase64;
+                    }
+                    await handbookInfor.save();
+
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'ok'
+                    })
+                } else {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'Không tồn tại'
+                    })
+                }
+            }
+        }
+        catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+let DeleteHandbook = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let handbook = await db.Handbook.findOne({
+                where: { id: data.id },
+                raw: false
+            })
+            if (!handbook) {
+                resolve({
+                    errCode: 2,
+                    message: `The handbook isn't exist!`
+                })
+            }
+
+            else {
+                await handbook.destroy();
+
+                resolve({
+                    errCode: 0,
+                    message: "The handbook is deleted"
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+
+    })
+}
+
+
 module.exports = {
     createHandbook: createHandbook,
     getAllHandbook: getAllHandbook,
     getDetailHandbookById: getDetailHandbookById,
-    getAllHandbookVer2: getAllHandbookVer2
+    getAllHandbookVer2: getAllHandbookVer2,
+    EditHandbook: EditHandbook,
+    DeleteHandbook: DeleteHandbook
 }

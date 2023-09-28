@@ -79,6 +79,14 @@ let initWebRoutes = (app) => {
 
     router.get('/api/get-all-handbook-ver2', handbookController.getAllHandbookVer2);
 
+    router.post('/api/edit-handbook', handbookController.EditHandbook);
+    router.post('/api/delete-handbook', handbookController.DeleteHandbook);
+
+
+
+
+
+
 
 
 
